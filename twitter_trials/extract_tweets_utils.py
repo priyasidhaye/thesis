@@ -12,9 +12,11 @@ with open('.config','r') as config_file :
 		access_token_secret = json_obj["access_token_secret"]
 	)
 
-def get_status_by_id (id) : 
-	return api.GetStatus(id)
+#Returns list of tweet objects for list of ids
+def get_status_by_ids (ids) : 
+	return [api.GetStatus(id) for id in ids]
 
+#writes list of tweet objects to the given file as a JSON string
 def write_tweets_to_file (tweets, filename) :
 	tweet_dict = {}
 	counter = 0
@@ -24,3 +26,15 @@ def write_tweets_to_file (tweets, filename) :
 	with open(filename, 'w') as op_file :
 		op_file.write(json.dumps(tweet_dict))		
 				
+	return
+
+
+#Returns list of trend names only
+def get_current_trends() :
+	return [trend.name for trend in api.GetTrendsCurrent()]
+
+
+#Returns list of tweets for a given list of list of trends
+def get_tweets_for_trends(trends = get_current_trends(), count_per_trend = 100) :
+	return [api.GetSearch(term = trend_name, lang = 'en', count = count_per_thread, include_entities = 'true') for trend_name in trends]
+		
