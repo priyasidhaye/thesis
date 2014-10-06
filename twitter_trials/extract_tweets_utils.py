@@ -19,22 +19,30 @@ def get_status_by_ids (ids) :
 #writes list of tweet objects to the given file as a JSON string
 def write_tweets_to_file (tweets, filename) :
 	tweet_dict = {}
-	counter = 0
 	for tweet in tweets : 
 		tweet_dict[tweet.id] = tweet.AsDict()
-
+	print 'Printing tweets'
 	with open(filename, 'w') as op_file :
-		op_file.write(json.dumps(tweet_dict))		
-				
+		op_file.write(json.dumps(tweet_dict))
 	return
 
 
-#Returns list of trend names only
+#Returns list of trend names only and write to file if filename
 def get_current_trends() :
-	return [trend.name for trend in api.GetTrendsCurrent()]
+	trends = api.GetTrendsCurrent()
+	trends_names = [trend.name for trend in trends]
+	print 'Printing trends'
+	with open('./data/trends/' + trends[0].timestamp, 'w') as op_file :		
+		op_file.write(json.dumps(trends_names))
+	return trends_names
 
 
 #Returns list of tweets for a given list of list of trends
-def get_tweets_for_trends(trends = get_current_trends(), count_per_trend = 100) :
-	return [api.GetSearch(term = trend_name, lang = 'en', count = count_per_thread, include_entities = 'true') for trend_name in trends]
-		
+  
+def get_tweets_for_trends(trends, count_per_trend = 100) :
+	tweets = []
+	for trend_name in trends :
+		search_result = api.GetSearch(term = trend_name, lang = 'en', count = count_per_trend, include_entities = 'true') 
+		for tweet in search_result :
+			tweets.append(tweet) 
+	return tweets		
