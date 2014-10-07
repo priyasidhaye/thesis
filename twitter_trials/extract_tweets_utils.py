@@ -38,7 +38,6 @@ def get_current_trends() :
 
 
 #Returns list of tweets for a given list of list of trends
-  
 def get_tweets_for_trends(trends, count_per_trend = 100) :
 	tweets = []
 	for trend_name in trends :
@@ -46,3 +45,20 @@ def get_tweets_for_trends(trends, count_per_trend = 100) :
 		for tweet in search_result :
 			tweets.append(tweet) 
 	return tweets		
+
+#Writes all the tweets from files in the given directory path to the given file. 
+def write_all_tweets_to_file(dir_path, file_path) :
+	from os import listdir
+	from os.path import join
+	
+	with open(file_path, 'w') as op_file_object : 
+		files = [f for f in listdir(dir_path)]
+		for file_name in files : 
+			print file_name
+			with open(join(dir_path, file_name), 'r') as tweet_file_object :
+				json_object = json.load(tweet_file_object)
+				keys_in_file = json_object.keys()
+				for key in keys_in_file :
+					op_file_object.write(json_object[key]["text"].encode('utf-8'))
+	return	
+	
