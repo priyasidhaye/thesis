@@ -53,12 +53,16 @@ def write_all_tweets_to_file(dir_path, file_path) :
 	
 	with open(file_path, 'w') as op_file_object : 
 		files = [f for f in listdir(dir_path)]
+		unique_ids = []
 		for file_name in files : 
 			print file_name
 			with open(join(dir_path, file_name), 'r') as tweet_file_object :
 				json_object = json.load(tweet_file_object)
 				keys_in_file = json_object.keys()
 				for key in keys_in_file :
-					op_file_object.write(json_object[key]["text"].encode('utf-8'))
+					if key not in unique_ids : 
+						op_file_object.write(json_object[key]["text"].encode('utf-8'))
+						op_file_object.write("\n\n")
+						unique_ids.append(key)
 	return	
 	
