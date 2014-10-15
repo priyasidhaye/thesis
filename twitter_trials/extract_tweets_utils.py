@@ -46,8 +46,9 @@ def get_tweets_for_trends(trends, count_per_trend = 100) :
 			tweets.append(tweet) 
 	return tweets		
 
-#Writes all the tweets from files in the given directory path to the given file. 
-def write_all_tweets_to_file(dir_path, file_path) :
+#Writes all the unique tweets from files in the given directory path to the given file. 
+#If removeRT = 1, removes Retweet ids from the file.
+def write_all_tweets_to_file(dir_path, file_path,removeRT) :
 	from os import listdir
 	from os.path import join
 	
@@ -60,6 +61,8 @@ def write_all_tweets_to_file(dir_path, file_path) :
 				json_object = json.load(tweet_file_object)
 				keys_in_file = json_object.keys()
 				for key in keys_in_file :
+					if removeRT is 1 and "RT" in key :
+						continue
 					if key not in unique_ids : 
 						op_file_object.write(json_object[key]["text"].encode('utf-8'))
 						op_file_object.write("\n\n")
