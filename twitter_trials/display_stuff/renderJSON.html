@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<title>JSON explorer</title>
+		<script type='text/javascript'>
+			function renderJSON(obj) {
+			    'use strict';
+				 var keys = [],
+				 retValue = "";
+				 for (var key in obj) {
+					 if (typeof obj[key] === 'object') {
+						 retValue += "<div class='tree'>" + key;
+						 retValue += renderJSON(obj[key]);
+						 retValue += "</div>";
+					 } else {
+					     retValue += "<div class='tree'>" + key + " = " + obj[key] + "</div>";
+					 }
+					 keys.push(key);
+				 }
+				 return retValue;
+			}
+
+		</script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	</head>
+		
+	<body id="body"> 
+	<p> Browse file to view</p>
+	<input type="file" id="files" name="files[]"/>
+	<script>
+		function handleFileSelect(evt){
+			var files = evt.target.files;
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				var contents = e.target.result;
+				//console.log(contents);
+				var JSONobj = JSON.parse(contents);
+				var output = renderJSON(JSONobj); 
+				console.log(output);
+				//document.getElementById("body").appendChild(output);	
+				$('body').append(output);
+			};
+			reader.readAsText(files[0]);
+		}
+
+		document.getElementById('files').addEventListener('change', handleFileSelect, false);
+		
+	</script>
+	</body>
