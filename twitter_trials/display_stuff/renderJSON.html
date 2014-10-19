@@ -8,11 +8,11 @@
 				 retValue = "";
 				 for (var key in obj) {
 					 if (typeof obj[key] === 'object') {
-						 retValue += "<div class='tree'>" + key;
+						 retValue += "<div class='panel'>" + key;
 						 retValue += renderJSON(obj[key]);
 						 retValue += "</div>";
 					 } else {
-					     retValue += "<div class='tree'>" + key + " = " + obj[key] + "</div>";
+					     retValue += "<div class='panel'>" + key + " = " + obj[key] + "</div>";
 					 }
 					 keys.push(key);
 				 }
@@ -21,6 +21,7 @@
 
 		</script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href = "stylesheets/foundation.css" type = "text/css" rel = "stylesheet">
 	</head>
 		
 	<body id="body"> 
