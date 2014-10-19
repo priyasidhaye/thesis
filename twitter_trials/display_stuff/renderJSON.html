@@ -12,7 +12,7 @@
 						 retValue += renderJSON(obj[key]);
 						 retValue += "</div>";
 					 } else {
-					     retValue += "<div class='panel'>" + key + " = " + obj[key] + "</div>";
+						 retValue += "<div class='panel'>" + key + " = " + obj[key] + "</div>";
 					 }
 					 keys.push(key);
 				 }
@@ -22,29 +22,56 @@
 		</script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<link href = "stylesheets/foundation.css" type = "text/css" rel = "stylesheet">
+		<link href = "stylesheets/more_styling.css" type = "text/css" rel = "stylesheet">
 	</head>
 		
 	<body id="body"> 
-	<p> Browse file to view</p>
-	<input type="file" id="files" name="files[]"/>
-	<script>
-		function handleFileSelect(evt){
-			var files = evt.target.files;
-			var reader = new FileReader();
-			reader.onload = function(e) {
-				var contents = e.target.result;
-				//console.log(contents);
-				var JSONobj = JSON.parse(contents);
-				var output = renderJSON(JSONobj); 
-				console.log(output);
-				//document.getElementById("body").appendChild(output);	
-				$('body').append(output);
-			};
-			reader.readAsText(files[0]);
-		}
+	<div id = "left_panel">
+		<div class='panel'>
+		<p> Browse file to view</p>
+		<input type="file" id="files" name="files[]"/>
+		</div>
+		<script type= "text/javascript">
+			function handleFileSelect(evt){
+				var files = evt.target.files;
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var contents = e.target.result;
+					var JSONobj = JSON.parse(contents);
+					var output = renderJSON(JSONobj); 
+					$('#left_panel').append(output);
+					populate_right_panel(JSONobj);
+				};
+				reader.readAsText(files[0]);
+			}
+	
+			document.getElementById('files').addEventListener('change', handleFileSelect, false);	
 
-		document.getElementById('files').addEventListener('change', handleFileSelect, false);
-		
-	</script>
+			var container = document.createElement('div');
+			container.id = "left_panel";
+
+			function populate_right_panel(obj) {
+				var tags = [];
+				for (var key in obj) {
+					tweet = obj[key];
+					var keys2 = Object.keys(tweet);
+					for (key2 in tweet) {
+						if (key2 == "hashtags") {
+							//console.log(tweet[key2] instanceof Array);
+							for (var i=0; i<tweet[key2].length; i++) {
+								if ( tags.indexOf(tweet[key2][i]) < 0) {
+									console.log(tweet[key2][i]);
+									tags.push(tweet[key2][i]);
+									$('#right_panel').append('<div> ' + tweet[key2][i] + '</div>');		
+								}
+							}
+						}
+					}
+				}
+			}
+		</script>
+	</div>
+	<div id = "right_panel">
+	</div>
 	</body>
 </html>

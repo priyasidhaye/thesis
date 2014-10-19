@@ -1,0 +1,16 @@
+.panel{
+	margin-left: 20px;
+	//width: 1000px;
+	margin-right:20px;
+	align:
+}
+
+#left_panel{
+	width: 70% ;
+	float : left;
+}
+
+#right_panel{
+	width : 30%;
+	float : right;
+}
