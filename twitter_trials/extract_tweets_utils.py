@@ -69,3 +69,24 @@ def write_all_tweets_to_file(dir_path, file_path,removeRT) :
 						unique_ids.append(key)
 	return	
 	
+
+#For every tweet execute function given in parameter
+def for_every_tweet(filename, op_file_name, function_name) :
+	with open(filename,'r') as file_obj : 
+		with open(op_file_name, 'w') as op_file_obj :
+			tweets = json.load(file_obj)
+			for tweet_id in tweets :
+			 	return_value = function_name(tweets[tweet_id])
+				if return_value != "" :
+					op_file_obj.write(return_value)
+	return
+
+#Return links if links are present in a tweet, null if no url.
+def return_urls(tweet) :
+	ret_string = ""
+	if u'urls' in tweet.keys() :
+		for url in tweet['urls'] :
+			ret_string += url + '\n'
+			
+	return ret_string
+	return
