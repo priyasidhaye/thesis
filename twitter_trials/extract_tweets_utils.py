@@ -37,7 +37,7 @@ def get_current_trends() :
 	return trends_names
 
 
-#Returns list of tweets for a given list of list of trends
+#Returns list of tweets for a given list of trends
 def get_tweets_for_trends(trends, count_per_trend = 100) :
 	tweets = []
 	for trend_name in trends :
@@ -69,16 +69,27 @@ def write_all_tweets_to_file(dir_path, file_path,removeRT) :
 						unique_ids.append(key)
 	return	
 	
+#Write search of a specific hashtag to file
+def search_and_write(search_term, file_name) :
+	search_result = api.GetSearch(term = search_term, lang = 'en', count = 2000, include_entities = 'true')
+	tweets = []
+	for tweet in search_result :
+			tweets.append(tweet) 
+	write_tweets_to_file(tweets, file_name)
+	return
+
 
 #For every tweet execute function given in parameter
 def for_every_tweet(filename, op_file_name, function_name) :
+	op_dict = {}
 	with open(filename,'r') as file_obj : 
-		with open(op_file_name, 'w') as op_file_obj :
-			tweets = json.load(file_obj)
-			for tweet_id in tweets :
-			 	return_value = function_name(tweets[tweet_id])
-				if return_value != "" :
-					op_file_obj.write(return_value)
+		tweets = json.load(file_obj)
+		for tweet_id in tweets :
+		 	return_value = function_name(tweets[tweet_id])
+			if return_value != "" :
+				op_dict[tweet_id] = return_value
+	with open(op_file_name, 'w') as op_file_obj :
+		op_file_obj.write(json.dumps(op_dict))
 	return
 
 #Return links if links are present in a tweet, null if no url.
@@ -86,7 +97,6 @@ def return_urls(tweet) :
 	ret_string = ""
 	if u'urls' in tweet.keys() :
 		for url in tweet['urls'] :
-			ret_string += url + '\n'
-			
+			ret_string += url + '\n'	
 	return ret_string
 	return
