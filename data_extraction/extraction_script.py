@@ -20,12 +20,9 @@ with open(input_filename, 'r') as search_term_file :
 		
 #Write all tweets extracted to a file
 data_utils.write_tweets_to_file(tweetsets, sys.argv[1] + 'temp/all_tweets.json')
-'''
-with open(sys.argv[1]  + 'temp/all_tweets.json', 'w') as output_file_object : 
-	output_file_object.write(json.dumps(tweetsets))
-'''	
 #Go through all the tweets and extract links and write tweet id -> link json
 #Go through all the links and extract articles
-
-
+#write display file
+data_utils.write_tweets_for_display(tweetsets, sys.argv[1] + 'display.json')
+data_utils.append_unique_tweets_data('data/day5/temp/all_tweets.json', 'all_tweets.json')
 

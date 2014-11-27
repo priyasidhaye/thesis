@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import newspaper
 from newspaper import Article
 
-url_id_count = 0
-
 #Returns the numbero of unique users
 def number_of_unique_users(filename) :
 	with open(filename, 'r') as data_obj :
@@ -86,18 +84,23 @@ def url_flip (filename, op_file) :
 
 #Fetches the actual text of the urls. 
 #First trial run to see how many come up with decent texts
-def fetch_url_data(filename, op_file) :
+def fetch_url_data(filename, op_file, bad_urls) :
 	urls = {}
 	new_urls = {}
 	with open(filename, 'r') as url_file : 
 		urls = json.load(url_file)
 	for url in urls :
+		try : 
+			article = Article(url, 'en')
+			article.download()
+			article.parse()
+		except :
+			with open(bad_urls, 'a') as bad_urls_obj :
+				bad_urls_obj.write(url +'\n')
+			continue
 		new_id = generate_id(url)
 		temp = {}
 		temp['url'] = url
-		article = Article(url, 'en')
-		article.download()
-		article.parse()
 		temp['title'] = article.title
 		temp['text'] = article.text
 		temp['tweets'] = urls[url]
@@ -107,4 +110,6 @@ def fetch_url_data(filename, op_file) :
 		output_file.write(json.dumps(new_urls))
 
 def generate_id(url):
-	return url_id_count
+	generate_id.url_id_count += 1
+	return generate_id.url_id_count
+generate_id.url_id_count = 0
